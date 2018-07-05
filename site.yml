@@ -1,0 +1,8 @@
+---
+# - import_playbook: common.yml
+- import_playbook: lvm.yml
+- import_playbook: ha.yml
+- import_playbook: keepalived.yml
+- import_playbook: rabbit.yml
+# - include: nginx_plus.yml
+# - include: nginx-sync.yml

@@ -1,0 +1,10 @@
+---
+haproxy_socket: /var/lib/haproxy/stats
+haproxy_chroot: /var/lib/haproxy
+haproxy_user: haproxy
+haproxy_group: haproxy
+haproxy_node_1: RBT01 172.28.128.10
+haproxy_node_2: RBT02 172.28.128.11
+haproxy_node_3: RBT03 172.28.128.12
+haproxy_type_balance: roundrobin
+haproxy_type_mode: http

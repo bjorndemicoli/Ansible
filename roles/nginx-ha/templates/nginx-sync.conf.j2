@@ -1,0 +1,8 @@
+NODES="{% for node in groups['lb'] %}
+{% if ansible_eth1.ipv4.address != hostvars[node]["ansible_eth1"]["ipv4"]["address"] %}
+    {{ hostvars[node]["ansible_eth1"]["ipv4"]["address"] }}
+{% endif %}
+{% endfor %}"
+CONFPATHS="/etc/nginx
+/etc/ssl/nginx"
+EXCLUDE="default.conf"

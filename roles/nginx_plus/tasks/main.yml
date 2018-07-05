@@ -1,0 +1,143 @@
+---
+
+# Disable SELinux
+- selinux:
+    state: disabled
+
+#Install Dependencies
+- include_tasks: dependencies.yml
+
+# Variable setup.
+- name: Define nginx_user
+  set_fact:
+    nginx_user: "{{ __nginx_user }}"
+  when: nginx_user is not defined
+  tags:
+    - install_nginx
+    - configure_nginx
+
+#SSH conf
+
+- name: Creates directory SSH
+  file: path=/root/.ssh state=directory
+
+
+#Create directories
+
+- name: Creating  folders nginx/sites
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    group: root
+    owner: root
+  with_items:
+    - /etc/nginx/sites-available/front
+    - /etc/nginx/sites-available/front/prod
+    - /etc/nginx/sites-available/front/staging
+    - /etc/nginx/sites-available/igc
+    - /etc/nginx/sites-available/igc/prod
+    - /etc/nginx/sites-available/igc/staging
+    - /etc/nginx/sites-available/services
+    - /etc/nginx/sites-available/services/internal
+    - /etc/nginx/sites-available/sports
+    - /etc/nginx/sites-available/sports/prod
+    - /etc/nginx/sites-enabled/front
+    - /etc/nginx/sites-enabled/front/prod
+    - /etc/nginx/sites-enabled/front/staging
+    - /etc/nginx/sites-enabled/igc
+    - /etc/nginx/sites-enabled/igc/prod
+    - /etc/nginx/sites-enabled/igc/staging
+    - /etc/nginx/sites-enabled/services
+    - /etc/nginx/sites-enabled/services/internal
+    - /etc/nginx/sites-enabled/sports
+    - /etc/nginx/sites-enabled/sports/prod
+
+#Pusk Key
+
+- name: copy {{ item }}
+  copy:
+    src: "{{ item }}"
+    dest: /etc/ssl/nginx/{{ item }}
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+    - nginx-repo.crt
+    - nginx-repo.key
+
+
+
+# Setup/install tasks.
+- name: Enable nginx repo
+  template:
+    src: nginx.repo.j2
+    dest: /etc/yum.repos.d/nginx.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Ensure nginx-plus is installed.
+  yum: 
+   name: nginx-plus
+   state: installed
+   enablerepo: nginx-plus
+
+- name: copy nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: 0644
+    owner: root
+    group: root
+  tags:
+    - configure_nginx
+
+- name: Ensure nginx is started and enabled to start at boot.
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  tags:
+    - configure_nginx
+
+# Nginx setup SSL.
+
+- name: Creates directory SSL
+  file: path=/etc/nginx/ssl state=directory
+
+- name: copy {{ item }}
+  copy:
+    src: "{{ item }}"
+    dest: /etc/nginx/ssl/{{ item }}
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+    - wildcard.igamingcloud.com-2018-chained.cer
+    - wildcard.igamingcloud.com-2020-chained.cer
+    - wildcard.igamingcloud.com-2018.cer
+    - wildcard.igamingcloud.com-2018.key
+    - dhparam_2048.pem
+    - dhparam.pem
+
+
+# Copy conf Files 
+
+- name: copy {{ item }}
+  copy:
+    src: "{{ item }}"
+    dest: /etc/nginx/sites-includes/{{ item }}
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+    - front_prod_location.conf
+    - front_prod_server.conf
+    - front_staging_location.conf
+    - front_staging_server.conf
+    - igc_prod_location.conf
+    - igc_prod_server.conf
+    - igc_staging_location.conf
+    - igc_staging_server.conf
+

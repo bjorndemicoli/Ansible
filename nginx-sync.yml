@@ -1,0 +1,7 @@
+---
+- name: 'nginx-sync test'
+  hosts: lb-master
+  remote_user: vagrant
+
+  roles:
+    - role: nginx-sync

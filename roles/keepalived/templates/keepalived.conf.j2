@@ -1,0 +1,47 @@
+vrrp_script chk_haproxy {
+    script "pidof haproxy"
+    interval 2
+}
+
+vrrp_instance public {
+    interface enp0s8
+{% if master is defined %}
+    state MASTER
+    priority 200
+{% else %}
+    state BACKUP
+    priority 100
+{% endif %}
+
+    virtual_router_id 50
+    unicast_src_ip {{ ansible_enp0s8.ipv4.address }}
+    unicast_peer {
+{% for node in groups['PROXY'] %}
+{% if ansible_enp0s8.ipv4.address != hostvars[node].ansible_ssh_host %}
+    {{ hostvars[node].ansible_ssh_host }}
+{% endif %}
+{% endfor %}
+    }
+
+    authentication {
+        auth_type PASS
+        auth_pass {{ ha.auth }}
+    }
+
+    virtual_ipaddress {
+        {{ ha.internal_vip }}/32 dev enp0s8
+    }
+
+    track_script {
+        chk_haproxy
+    }
+}
+
+    }
+
+    track_script {
+        chk_haproxy
+    }
+
+    notify_master /etc/keepalived/master.sh
+}

@@ -1,0 +1,9 @@
+---
+
+- name: INCLUDE | RedHat family
+  include: centos.yml
+  when: ansible_os_family == "RedHat"
+
+- name: INCLUDE | Apply
+  include: install.yml
+  when: lvm_apply

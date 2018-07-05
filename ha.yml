@@ -1,0 +1,8 @@
+---
+- name: HAproxy
+  hosts: PROXY
+  remote_user: root
+  become: yes
+
+  roles:
+    - role: HA

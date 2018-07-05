@@ -1,0 +1,30 @@
+---
+
+- include_tasks: dependencies.yml
+  tags:
+    - dependencies
+
+- include_tasks: base.yml
+  tags:
+    - centos-base
+
+- include_tasks: centos-bmp.yml
+  tags:
+    - centos-base
+    
+- include_tasks: centos-security.yml
+  tags:
+    - centos-base
+
+- include_tasks: upd-ssh-hostkeys.yml
+  tags:
+    - centos-base
+
+- include_tasks: post-task.yml
+  tags:
+    - centos-base
+    
+- include_tasks: firewall.yml
+  tags:
+    - firewall
+  when: firewalld_disabled

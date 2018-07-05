@@ -1,0 +1,10 @@
+#! /bin/sh
+#
+# freeram.sh
+# Copyright (C) 2017 Stefano Stella <mprenditore@gmail.com>
+#
+# Distributed under terms of the MIT license.
+#
+# freeram - print free ram in MB
+
+free | grep Mem | awk '{print $7}'

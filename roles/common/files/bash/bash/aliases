@@ -1,0 +1,141 @@
+#============================================================
+#
+#  ALIASES AND FUNCTIONS
+#
+#  Arguably, some functions defined here are quite big.
+#  If you want to make this file smaller, these functions can
+#+ be converted into scripts and removed from here.
+#
+#============================================================
+
+#-------------------
+# Personal Aliases
+#-------------------
+# Mprenditore's aliases
+alias ucat='grep -v "^$\|^\s*\#"'
+alias zap="rm -rf"
+alias fu='sudo $(fc -ln -1)'
+alias sha256sum='sha256sum --ignore-missing'
+alias vi='vim'
+alias colors='for i in {0..255} ; do     printf "\x1b[38;5;${i}mcolour${i}\n"; done' # print colors that chan be used on bash
+alias myip='dig +short myip.opendns.com @resolver1.opendns.com'
+alias rmhost='rmline ~/.ssh/known_hosts'
+alias o='xdg-open'
+# alias ssh='ssh -R 52697:localhost:52697'
+
+# TheFuck aliases
+# alias fo='thefuck $(fc -ln -1)'
+alias fuck='TF_CMD=$(TF_ALIAS=fuck PYTHONIOENCODING=utf-8 TF_SHELL_ALIASES=$(alias) thefuck $(fc -ln -1)) && eval $TF_CMD && history -s $TF_CMD'
+alias fo='fuck'
+alias fuk='fuck'
+
+# SUDO aliases
+alias adb='sudo adb'
+alias fastboot='sudo fastboot'
+alias dnf='sudo dnf'
+alias service='sudo service'                                                                                                                                                                                                                                                    
+alias systemctl='sudo systemctl' 
+
+# Interactive rm, cp, mv
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+# -> Prevents accidentally clobbering files.
+alias mkdir='mkdir -p'
+
+alias h='history'
+alias j='jobs -l'
+alias which='type -a'
+alias ..='cd ..'
+
+# Pretty-print of some PATH variables:
+alias path='echo -e ${PATH//:/\\n}'
+alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
+
+
+alias du='du -kh'    # Makes a more readable output.
+alias du1='du -x --max-depth=1'
+alias df='df -kTh'
+
+#-------------------------------------------------------------
+# The 'ls' family (this assumes you use a recent GNU ls).
+#-------------------------------------------------------------
+# Add colors for filetype and  human-readable sizes by default on 'ls':
+alias ls='ls -F --color=auto --group-directories-first'
+alias lx='ls -lXB'         #  Sort by extension.
+alias lk='ls -lSr'         #  Sort by size, biggest last.
+alias lt='ls -ltr'         #  Sort by date, most recent last.
+alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
+alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
+alias lh='ls -h'           #  Show human redeable size
+alias la='ls -a'           #  Show hidden files
+alias lal='ls -al'         #  Show hidden files in list mode
+
+# The ubiquitous 'll': directories first, with alphanumeric sorting:
+alias ll="ls -lv"
+alias lm='ll |more'        #  Pipe through 'more'
+alias lr='ll -R'           #  Recursive ls.
+alias la='ls -Av'  #  Show hidden files.
+alias lla='ll -A'           #  Show hidden files.
+alias tree='tree -Csuh'    #  Nice alternative to 'recursive ls' ...
+
+
+#-------------------------------------------------------------
+# Tailoring 'less'
+#-------------------------------------------------------------
+
+alias more='less'
+export PAGER=less
+export LESSCHARSET='latin1'
+export LESSOPEN='|/usr/bin/lesspipe.sh %s 2>&-'
+                # Use this if lesspipe.sh exists.
+export LESS='-i -N -w  -z-4 -g -e -M -X -F -R -P%t?f%f \
+:stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
+
+# LESS man page colors (makes Man pages more readable).
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
+
+#-------------------------------------------------------------
+# Spelling typos - highly personnal and keyboard-dependent :-)
+#-------------------------------------------------------------
+
+alias xs='cd'
+alias vf='cd'
+alias moer='more'
+alias moew='more'
+alias kk='ll'
+alias exho='echo'
+
+
+#-------------------------------------------------------------
+# A few fun ones
+#-------------------------------------------------------------
+
+# Adds some text in the terminal frame (if applicable).
+
+function xtitle()
+{
+    case "$TERM" in
+    *term* | rxvt)
+        echo -en  "\e]0;$*\a" ;;
+    *)  ;;
+    esac
+}
+
+
+# Aliases that use xtitle
+alias top='xtitle Processes on $HOST && top'
+alias make='xtitle Making $(basename $PWD) ; make'
+
+# Aliases that use xtitle
+alias top='xtitle Processes on $HOST && top'
+alias make='xtitle Making $(basename $PWD) ; make'
+
+# vim: set ts=4 sw=4 tw=0 ft=sh :

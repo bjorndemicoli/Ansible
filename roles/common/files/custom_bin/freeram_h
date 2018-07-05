@@ -1,0 +1,11 @@
+#! /bin/bash
+#
+# freeram_h.sh
+# Copyright (C) 2017 Stefano Stella <mprenditore@gmail.com>
+#
+# Distributed under terms of the MIT license.
+# 
+# freeram_h - print free ram in human redeable form
+
+
+free -h | grep Mem | awk '{print $7}'

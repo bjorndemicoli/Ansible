@@ -1,0 +1,8 @@
+---
+- name: RabbitMQ 
+  hosts: RBT
+  remote_user: vagrant
+  become: yes
+
+  roles:
+    - role: rabbitmq

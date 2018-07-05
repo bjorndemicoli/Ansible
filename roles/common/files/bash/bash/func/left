@@ -1,0 +1,9 @@
+#! /bin/sh
+left() {
+    echo -e $1\n
+    # FILE = $1
+    # echo -e ${FILE}\n
+    # OLD=`du "${FILE}" | awk '{print $1}'`;
+    # echo -e $OLD \n
+    #sleep 10;NEW=`du master.sql|awk '{print $1}'`;print $(((( 100000000 - $NEW ) / (( $NEW - $OLD ) * 6 )))) minute/s left
+}

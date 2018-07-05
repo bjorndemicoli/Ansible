@@ -1,0 +1,64 @@
+---
+- name: USER-KEYS | create user
+  user:
+    name: "{{ item }}"
+    append: yes
+  with_items:
+    - "{{ users }}"
+
+- name: USER-KEYS | create user .ssh dir
+  file:
+    path: "/home/{{ item }}/.ssh"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ users }}"
+
+- name: USER-KEYS | upload user key
+  copy:
+    src: "files/user-ssh-keys/{{ item }}"
+    dest: "/home/{{ item }}/.ssh/{{ item }}.pub"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 400
+  with_items:
+    - "{{ users }}"
+
+- name: USER-KEYS | add user key to authorized keys
+  authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', 'user-ssh-keys/{{ item }}') }}"
+  with_items:
+    - "{{ users }}"
+    
+# - name: USER-KEYS | create sudoers file for user
+#   file: path=/etc/sudoers.d/{{ item | replace('.', '')}} state=touch mode=0440
+#   with_items:
+#     - "{{ users }}"
+
+- name: USER-KEYS | passwordless sudo for  user
+  lineinfile: "dest=/etc/sudoers.d/{{ item | replace('.', '') }} state=present mode=0440 create=yes line='{{ item }}  ALL=NOPASSWD: ALL'"
+  with_items:
+    - "{{ users }}"
+    
+
+- name: USER-KEYS | remove user
+  user:
+    name: "{{ item }}"
+    append: yes
+    state: absent
+  with_items:
+    - "{{ users_deleted }}"
+  when: deleted is defined
+
+- name: USER-KEYS | remove user dir
+  file:
+    path: "/home/{{ item }}"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ users_deleted }}"
+  when: deleted is defined

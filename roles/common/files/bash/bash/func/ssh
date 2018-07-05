@@ -1,0 +1,30 @@
+#! /bin/sh
+
+#--------------------------------------------------------------#
+# Mpre custom ssh launch in tmux
+#--------------------------------------------------------------#
+
+FIRSTSSH=0
+function ssh() {
+    # ps cax | grep -q tmux
+    # if [ $? -eq 0 ]; then
+        if [ $FIRSTSSH -eq 0 ]; then
+            echo $TMUX | grep tmux >/dev/null
+            if [ $? -ne 0 ]; then
+                # tmux attach \; new-window ssh "$@"
+                tmux rename-window "$*"
+            else
+                tmux rename-window "$*"
+#                command ssh -R 52697:localhost:52697 "$@"
+            fi
+            tmux rename-window "bash"
+        else
+            tmux rename-window "$*"
+            FIRSTSSH=0
+        fi
+    # else
+        # FIRSTSSH=1
+        # tmux new -s ssh-sess\; send -t ssh-sess "ssh -R 52697:localhost:52697 $@" C-m
+    # fi
+}
+

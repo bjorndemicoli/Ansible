@@ -1,0 +1,24 @@
+rmline() {
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo "[ERROR] Missing value" >&2
+        echo "Usage: rmline <file_to_apply> <line_number_to_remove>" >&2;
+    else
+        if [ -f $1 ]; then
+            re='^[0-9]+$'
+            if ! [[ $2 =~ $re ]] ; then
+                echo "[ERROR] \"$2\" Not a number" >&2;
+            else
+                out=`sed -n -e "${2}p" "$1"`
+                if [ -z "$out" ];then
+                    echo "[ERROR] Line #${2} not fount in \"$1\""
+                else
+                    echo "[INFO] Removed line: $out"
+                    sed -i -e "${2}d" "$1"
+                fi
+            fi
+        else
+            echo "[ERROR] \"$1\" Not found" >&2;
+        fi
+    fi
+}
+# vim: set ts=4 sw=4 tw=0 ft=sh :

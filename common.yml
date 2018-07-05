@@ -1,0 +1,9 @@
+---
+- name: Install Centos-base repository
+  hosts: RBT:PROXY
+  remote_user: root
+  become: yes
+
+  roles:
+    - role: common
+    

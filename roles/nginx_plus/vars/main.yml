@@ -1,0 +1,5 @@
+---
+__nginx_user: "nginx"
+nginx_conf_path: /etc/nginx/sites-enabled/services/external/rabbitmq-amqp
+nginx_conf_subpath: services/external/rabbitmq-http
+nginx_conf_env: igc_staging_location.conf

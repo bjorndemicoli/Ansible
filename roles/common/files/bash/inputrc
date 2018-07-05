@@ -1,0 +1,12 @@
+## arrow up
+"\e[A":history-search-backward
+## arrow down
+"\e[B":history-search-forward
+
+# normal left/right arrows behaviour
+"\e[C":forward-char
+"\e[D":backward-char
+#
+# moving back/for-ward via Alt + left/right arrows
+"\e[1;3C":forward-word
+"\e[1;3D":backward-word

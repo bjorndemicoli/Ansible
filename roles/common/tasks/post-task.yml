@@ -1,0 +1,69 @@
+---
+- name: Install snmp service
+  yum: state=present name={{item}}
+  with_items:
+    - net-snmp
+    - net-snmp-utils
+  notify:
+    - restart snmpd
+#    
+#- name: upload custom scripts
+#  copy:
+#    src: "{{ item }}"
+#    dest: "/usr/local/bin/"
+#    owner: root
+#    group: root
+#    mode: '0755'
+#  with_fileglob:
+#    - files/custom_bin/*
+#
+#
+#- name: upload /etc/vim
+#  copy:
+#    src: "files/vi/vim/"
+#    dest: "/etc/vim/"
+#
+#- name: upload /etc/vimrc
+#  copy:
+#    src: "files/vi/vimrc"
+#    dest: "/etc/vimrc"
+#    owner: "root"
+#    group: "root"
+#    mode: 644
+#
+#- name: execute installVundle.sh
+#  command: sh /etc/vim/installVundle.sh
+#
+#
+#- name: upload /etc/tmux
+#  copy:
+#    src: files/tmux/tmux
+#    dest: /etc/tmux/
+#
+#- name: upload /etc/bashrc
+#  copy:
+#    src: files/tmux/tmux.conf
+#    dest: /etc/tmux.conf
+#    owner: root
+#    group: root
+#    mode: 644
+#
+#
+#- name: BASH | upload /etc/bash
+#  copy:
+#    src: "files/bash/{{ item }}/"
+#    dest: /etc/
+#  with_items:
+#    - bash
+#    - bash-git-prompt
+#
+#- name: BASH | upload /etc/bashrc
+#  copy:
+#    src: "files/bash/{{ item }}"
+#    dest: /etc/
+#    owner: root
+#    group: root
+#    mode: 0644
+#  with_items:
+#    - bashrc
+#    - inputrc`

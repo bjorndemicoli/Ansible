@@ -1,0 +1,291 @@
+#!/bin/bash
+#
+# Copyright (C) Nginx, Inc.
+
+PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin
+
+pause() {
+    echo
+    echo "Press <Enter> to continue..."
+    read -s
+}
+
+yesno() {
+    [ -n "$1" ] && echo "$1 (y/n)" >&2
+    while [ :: ]; do
+	read -s -n 1 rc
+	case "$rc" in
+	    y|Y)
+		return 1
+		;;
+	    n|N)
+		return 0
+		;;
+	    *)
+		echo "Please use 'y' or 'n'" >&2
+		;;
+	esac
+    done
+}
+
+onetwo() {
+    [ -n "$1" ] && echo "$1 [1/2]" >&2
+    while [ :: ]; do
+	read -s -n 1 rc
+	case "$rc" in
+	    1)
+		return 1
+		break
+		;;
+	    2)
+		return 2
+		break
+		;;
+	    *)
+		echo "Please use '1' or '2'" >&2
+		;;
+	esac
+    done
+}
+
+valid_ip()
+{
+    local ip=$1
+    local stat=1
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(\/[0-9]{0,2})?$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+
+    return $stat
+}
+
+readip() {
+    while [ :: ]; do
+	read -p "$1: " IP
+	if valid_ip $IP; then
+	    echo "You entered: $IP" >&2
+	    yesno "Is it correct?"
+	    if [ $? -eq 1 ]; then
+		break
+	    else
+		continue
+	    fi
+	else
+	    echo "Invalid IP address" >&2
+	fi
+    done
+    printf "%s" $IP
+}
+
+am_i_root() {
+    USERID=`id -u`
+    if [ 0 -ne $USERID ]; then
+        echo
+        echo "This script requires root privileges to run, exiting."
+        echo
+        exit 1
+    fi
+}
+
+get_ips() {
+    echo
+    echo "Step 1: configuring internal management IP addresses."
+    echo
+    echo "In order to communicate with each other, both nodes must have at least one IP address."
+    echo
+
+    NEEDPRIMARY=0
+    PRIMARY_IP=`ip a s | sed -ne '/127.0.0.1/!{s/^[ \t]*inet[ \t]*\([0-9.]\+\)\/.*$/\1/p}' | head -1`
+    PRIMARY_DEV=`ip addr show | grep "inet ${PRIMARY_IP}/" | awk '{print $NF}'`
+
+    if [ -z "${PRIMARY_IP}" -o -z "${PRIMARY_DEV}" ]; then
+	echo "Could not automatically obtain IP address."
+	NEEDPRIMARY=1
+    else
+	echo "The guessed primary IP of this node is: ${PRIMARY_IP}"
+	echo
+
+	yesno "Do you want to use this address for internal cluster communication?"
+	if [ $? -eq 0 ]; then
+	    NEEDPRIMARY=1
+	fi
+    fi
+
+    if [ ${NEEDPRIMARY} -eq 1 ]; then
+	while [ :: ]; do
+	    PRIMARY_IP=`readip "Enter internal IP address of this node"`
+	    PRIMARY_DEV=`ip addr show | grep "inet ${PRIMARY_IP}/" | awk '{print $NF}'`
+	    [ $? -eq 0 -a -n "${PRIMARY_DEV}" ] && break
+	    echo "ERROR: could not obtain primary network address."
+	    echo "You should check that ${PRIMARY_IP} is present on this node."
+	done
+    fi
+
+    echo "IP address of this host is set to: ${PRIMARY_IP}"
+    echo "Primary network interface: ${PRIMARY_DEV}"
+    echo
+
+    SECONDARY_IP=`readip "Now please enter IP address of a second node"`
+    echo "IP address of the second node is set to: ${SECONDARY_IP}"
+    pause
+}
+
+make_keepalived_config() {
+    echo
+    echo "Step 2: creating Keepalived configuration"
+    echo
+
+    if [ ! -d /etc/keepalived ]; then
+	mkdir -p /etc/keepalived
+    fi
+
+    echo "Now you have to choose cluster IP address."
+    echo "This address will be used as en entry point to all your cluster resources."
+    echo "The chosen address must not be one already associated with a physical node."
+    echo
+
+    CLUSTER_IP=`readip "Enter cluster IP address"`
+
+    echo
+
+    echo "You must choose which node should have the MASTER role in this cluster."
+    echo
+    echo "Please choose what the current node role is:"
+    echo "1) MASTER"
+    echo "2) BACKUP"
+    echo
+    echo "(on the second node you should choose the opposite variant)"
+    echo
+
+    while [ :: ]; do
+	echo "Press 1 or 2."
+	read -s -n 1 rc
+	case $rc in
+	    1)
+       	PRIORITY=101
+        echo "This is the MASTER node."
+        break
+		;;
+	    2)
+		PRIORITY=100
+		echo "This is the BACKUP node."
+        break
+		;;
+	    *)
+		;;
+	esac
+    done
+
+    cat /etc/nginx-ha/templates/keepalived.conf.tmpl | \
+    sed -e "s#%% PRIMARYIP %%#${PRIMARY_IP}#" | \
+    sed -e "s#%% SECONDARYIP %%#${SECONDARY_IP}#" | \
+    sed -e "s#%% PRIMARYDEV %%#${PRIMARY_DEV}#" | \
+    sed -e "s#%% PRIORITY %%#${PRIORITY}#" | \
+    sed -e "s#%% CLUSTERIP %%#${CLUSTER_IP}#" > /etc/keepalived/keepalived.conf
+}
+
+start_keepalived() {
+    echo
+    echo "Step 3: starting Keepalived"
+    echo
+
+    service keepalived status >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+	echo "Keepalived is already running."
+	pause
+	return
+    fi
+
+    echo "Starting Keepalived..."
+    service keepalived start >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+	echo "keepalived has been successully started."
+    else
+	echo "ERROR: cannot start keepalived. Please check the message(s) above"
+	echo "and /var/log/messages for details."
+	exit
+	exit 1
+    fi
+
+    pause
+}
+
+configure_cluster() {
+    echo
+    echo "Step 4: configuring cluster"
+    echo
+
+    echo "Enabling keepalived and nginx at boot time..."
+    if [ -f "/sbin/chkconfig" ]; then
+       chkconfig nginx on ||:
+       chkconfig keepalived on ||:
+    fi
+    if [ -f "/usr/sbin/update-rc.d" ]; then
+       /usr/sbin/update-rc.d nginx enable >/dev/null 2>&1 ||:
+       /usr/sbin/update-rc.d keepalived enable >/dev/null 2>&1 ||:
+    fi
+    fgrep -q 'net.ipv4.ip_nonlocal_bind=1' /etc/sysctl.conf || ( echo "net.ipv4.ip_nonlocal_bind=1" >> /etc/sysctl.conf && sysctl -p >/dev/null)
+    service nginx start >/dev/null 2>&1 ||:
+}
+
+# start
+
+if [ $# -gt 0 ]; then
+    am_i_root
+
+    exit $?
+fi
+
+echo "Thank you for using NGINX Plus!"
+echo
+echo "This script is intended for use with RHEL/CentOS/SLES/Debian/Ubuntu-based systems."
+echo "It will configure highly available NGINX Plus environment in Active/Passive pair."
+echo
+echo "NOTE: you will need the following in order to continue:"
+echo " - 2 running systems (nodes) with static IP addresses"
+echo " - one free IP address to use as Cluster IP endpoint"
+echo
+echo "It is strongly recommended to run this script simultaneously on both nodes,"
+echo "e.g. use two terminal windows and switch between them step by step."
+echo
+echo "It is recommended to run this script under screen(1) in order to allow"
+echo "installation process to continue in case of unexpected session disconnect."
+pause
+
+am_i_root
+
+get_ips
+make_keepalived_config
+start_keepalived
+
+configure_cluster
+
+echo "Initial configuration complete!"
+echo
+echo "Keepalived logs are written to syslog and located here:"
+[ -f "/var/log/messages" ] && echo "/var/log/messages"
+[ -f "/var/log/syslog" ] && echo "/var/log/syslog"
+echo
+echo "Further configuration may be required according to your needs"
+echo "and environment."
+echo "Main configuration file for keepalived can be found at:"
+echo " /etc/keepalived/keepalived.conf"
+echo
+echo "To control keepalived, use 'service keepalived' command:"
+echo " service keepalived status"
+echo
+echo "Keepalived documentation can be found at:"
+echo "http://www.keepalived.org/"
+echo
+echo "NGINX-HA-Keepalived documentation can be found at:"
+echo "/usr/share/doc/nginx-ha-keepalived/README"
+echo
+echo "Thank you for using NGINX Plus!"
+echo

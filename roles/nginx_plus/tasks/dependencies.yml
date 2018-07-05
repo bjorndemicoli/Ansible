@@ -1,0 +1,55 @@
+---
+
+- name: Ensure ca-certificates is installed.
+  yum: 
+   name: ca-certificates
+   state: installed
+
+- name: Ensure wget is installed.
+  yum: 
+   name: wget
+   state: installed
+
+- name: Ensure epel-release is installed.
+  yum: 
+   name: epel-release
+   state: installed
+
+- name: Ensure htop is installed.
+  yum: 
+   name: htop
+   state: installed
+
+- name: Ensure rsync is installed.
+  yum: 
+   name: rsync
+   state: installed
+
+
+#Install Unison
+
+- name: Ensure ca-certificates is installed.
+  yum: 
+   name: "{{ item }}"
+   state: installed
+  with_items:
+   - ocaml
+   - ocaml-camlp4-devel
+   - ctags
+   - ctags-etags
+
+- name: Creates directory Unison
+  file: path=/opt/unison state=directory mode=0777
+
+- name: Unarchive a file that needs to be downloaded
+  unarchive:
+    src: http://www.seas.upenn.edu/~bcpierce/unison//download/releases/stable/unison-2.48.4.tar.gz
+    dest: /opt/unison
+    remote_src: yes
+
+- make:
+    chdir: /opt/unison/src
+
+- name: Copy Unison
+  command: cp -r /opt/unison /usr/local/sbin/unison
+  sudo: yes

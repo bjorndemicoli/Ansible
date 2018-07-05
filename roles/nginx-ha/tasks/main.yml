@@ -1,0 +1,45 @@
+---
+#Install NGINX HA and SYNC
+
+- name: install nginx HA + Sync
+  yum: name={{ item }} state=installed
+  with_items: 
+    - nginx-ha-keepalived
+    - nginx-sync
+
+- name: set up keepalived configuration file
+  template: src=keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf
+  notify: restart keepalived
+
+- name: enable keepalived
+  service: name=keepalived state=started enabled=yes
+
+- name: set up nginx-sync.conf
+  template:
+    src: nginx-sync.conf.j2
+    dest: /etc/nginx-sync.conf
+
+#Generate Root key and push on all nodes
+
+# - name: fetch all public ssh keys
+#   remote_user: root
+#   shell: cat ~/.ssh/id_rsa.pub
+#   register: ssh_keys
+#   tags:
+#     - ssh
+
+# - name: check keys
+#   remote_user: root
+#   debug: msg="{{ ssh_keys.stdout }}"
+#   tags:
+#     - ssh
+
+# - name: deploy keys on all servers
+#   remote_user: root
+#   authorized_key: user=root key="{{ item[0] }}"
+#   delegate_to: "{{ item[1] }}"
+#   with_nested:
+#     - "{{ ssh_keys.stdout }}"
+#     - "{{groups['lb']}}"
+#   tags:
+#     - ssh

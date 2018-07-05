@@ -1,0 +1,29 @@
+#! /bin/sh
+
+#--------------------------------------------------------------#
+# Mpre custom mosh launch in tmux
+#--------------------------------------------------------------#
+
+FIRSTMOSH=0
+mosh() {
+  ps cax | grep -q tmux
+  if [ $? -eq 0 ]; then
+    if [ $FIRSTMOSH -eq 0 ]; then
+        echo $TMUX | grep tmux >/dev/null
+        if [ $? -ne 0 ]; then
+            tmux attach \; new-window mosh "$@"
+            tmux rename-window "$*"
+        else
+            tmux rename-window "$*"
+            command mosh "$@"
+        fi
+        tmux rename-window "bash"
+    else
+        tmux rename-window "$*"
+        FIRSTMOSH=0
+    fi
+  else
+    FIRSTMOSH=1
+    tmux new -s ssh-sess\; send -t ssh-sess "mosh $@" C-m
+  fi
+}

@@ -1,0 +1,7 @@
+#! /bin/sh
+lwttr () {
+    curl http://wttr.in/$1
+}
+wttr () {
+    curl http://wttr.in/$1 2>/dev/null | head -7
+}

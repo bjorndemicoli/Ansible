@@ -1,0 +1,294 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx-ha/templates/nginx-sync.conf.j2",
+			"settings":
+			{
+				"buffer_size": 272,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/site.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/gen_root_key.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx-ha/templates/keepalived.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx-ha/tasks/main.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/nginx_plus.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/group_vars/lb",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/inventory",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx-ha/templates/nginx-sync.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/gen_root_key.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/tasks/dependencies.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx-ha/handlers/main.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/tasks/main.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/nginx_sync_bk.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/vars/main.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_sync.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_sync_bk.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/templates/nginx-sync-backup.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/templates/nginx-sync-master.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/tasks/nginx_ha.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/templates/keepalived.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/templates/nginx-sync.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/files/status.conf",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/handlers/main.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/group_vars/lb-master",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/keepalived/vars/main.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/keepalived/tasks/main.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx_plus/defaults/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/tasks/dependencies.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/tasks/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/templates/nginx-sync.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/templates/nginx.repo.j2",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/group_vars/lb-master",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/tasks/dependecies.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/keepalived.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/site.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/templates/nginx.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/files/igc_staging_server.conf",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/files/igc_staging_location.conf",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/files/igc_prod_server.conf",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/files/igc_prod_location.conf",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/files/front_staging_server.conf",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/files/front_staging_location.conf",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/files/front_prod_server.conf",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/roles/nginx_plus/files/front_prod_location.conf",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived-nginx/group_vars/lb-backup",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/roles/keepalived/vars/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/inventory",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/roles/keepalived/templates/keepalived.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/group_vars/lb-backup",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/roles/keepalived/handlers/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/group_vars/lb-master",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/roles/keepalived/tasks/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/keepalived.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/nginx_plus/tasks/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/nginx_plus/tasks/dependecies.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/nginx_plus/vars/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/roles/tasks/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/roles/templates/keepalived.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/keepalived/roles/handlers/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/nginx_plus/files/keepalived.conf",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/nginx_plus/defaults/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/nginx_plus/templates/nginx.conf.j2",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/nginx_folder/tasks/main.yml",
+		"/Users/carmine.fabrizio/Desktop/GIG-LAB/Ansible/NGINX/nginx/templates/nginx.repo.j2",
+		"/Users/carmine.fabrizio/Desktop/Various commands",
+		"/Users/carmine.fabrizio/GIG-BI-AWS-Frankfurt.pem",
+		"/Users/carmine.fabrizio/GIG-BI-AWS-Frankfurt.ppk",
+		"/Users/carmine.fabrizio/Desktop/Original-Repo-github/ansible-rabbitmq-master/tasks/install.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/rabbitmq/tasks/preinstall.yml",
+		"/Users/carmine.fabrizio/Desktop/Repository/Platform-GCP-Infra/templates/services/kubernetes-frontend.jinja",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/rabbitmq/tasks/monit.yml",
+		"/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/rabbitmq/tasks/install.yml",
+		"/Volumes/Ext-500GB/Automation Script/ansible-example/lamp_haproxy/roles/haproxy/templates/haproxy.cfg.j2",
+		"/Users/carmine.fabrizio/Desktop/Repository/ansible/roles/haproxy/templates/haproxy-config.cfg.j2",
+		"/Volumes/Ext-500GB/Automation Script/ansible-example/wordpress-nginx_rhel7/roles/nginx/tasks/main.yml",
+		"/Volumes/Ext-500GB/Automation Script/ansible-example/wordpress-nginx_rhel7/roles/nginx/templates/default.conf",
+		"/Volumes/Ext-500GB/Automation Script/Vagrant-Lab1/web-db_playbook.yml",
+		"/Volumes/Ext-500GB/Automation Script/ansible-example/lamp_haproxy/group_vars/all",
+		"/Volumes/Ext-500GB/Automation Script/ansible-example/lamp_haproxy/roles/haproxy/tasks/main.yml",
+		"/Users/carmine.fabrizio/Desktop/Repository/ansible/roles/haproxy/files/27-haproxy.conf",
+		"/Volumes/Ext-500GB/Automation Script/ansible-example/wordpress-nginx/roles/nginx/tasks/main.yml",
+		"/Volumes/Ext-500GB/Automation Script/vagrant/vagrant-ansible-lab/user.yml",
+		"/Volumes/Ext-500GB/Automation Script/Vagrant-Lab1/production/ansible.cfg",
+		"/Volumes/Ext-500GB/Automation Script/Vagrant-Lab1/inventory.yml",
+		"/Volumes/Ext-500GB/Automation Script/Vagrant-Lab1/production/inventory-prod",
+		"/Volumes/Ext-500GB/Automation Script/Vagrant-Lab1/production/group-vars/web-lab",
+		"/Volumes/Ext-500GB/Automation Script/Vagrant-Lab1/production/group-vars/all",
+		"/Volumes/Ext-500GB/Automation Script/Vagrant-Lab1/production/host_vars/web"
+	],
+	"find":
+	{
+		"height": 24.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"cluster"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/Users/carmine.fabrizio/Desktop/Repo-Ansible-Roles-GIG/roles/nginx-ha/templates/nginx-sync.conf.j2",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 272,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								272,
+								272
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "repo-GIG.sublime-project",
+	"replace":
+	{
+		"height": 44.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 276.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

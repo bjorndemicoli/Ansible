@@ -1,0 +1,12 @@
+#! /bin/sh
+#
+# freeram_c.sh
+# Copyright (C) 2017 Stefano Stella <mprenditore@gmail.com>
+#
+# Distributed under terms of the MIT license.
+#
+# freeram_c - print colour based on free ram percentage
+#   green = less free ram than $1
+#   red   = more free ram than $1
+
+echo $(if [[ $(free | grep Mem | awk '{print $7/$2*100}' | cut -d'.' -f1) -lt $1 ]]; then echo "red"; else echo "green"; fi)

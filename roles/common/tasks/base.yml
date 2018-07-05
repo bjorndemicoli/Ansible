@@ -1,0 +1,62 @@
+---
+- name: BASE | Set timezone
+  shell: timedatectl set-timezone Europe/Berlin
+
+- name: BASE | Ensure epel repo is installed
+  yum: state=present name=epel-release
+
+- name: BASE | Ensure base packages are installed
+  yum: state=present name={{ item }}
+  with_items:
+    - mlocate
+    - sudo
+    - nano
+    - htop
+    - net-tools
+    - libselinux-python
+    - p7zip
+    - p7zip-plugins
+    - yum-utils
+    - open-vm-tools
+    - python-pip
+
+#- name: BASE | Change IP Address
+#  lineinfile: dest=/etc/sysconfig/network-scripts/ifcfg-eth0 regexp="IPADDR={{ base.template_ip }}" line="IPADDR={{ ip }}"
+
+#- name: BASE | Change Hostname in network file
+#  lineinfile: dest=/etc/sysconfig/network regexp="HOSTNAME={{ base.template_hostname }}" line="HOSTNAME={{ hostname }}"
+
+#- name: BASE | Set Hostname
+#  hostname: name={{ hostname }}
+
+- name: BASE | Set selinux as DISABLE
+  selinux: policy=targeted state=disabled
+
+#- name: BASE | create ssh keys directory
+#  file: path=/etc/ssh/.keys state=directory
+#        owner=0 group=users mode=0755
+
+#- name: BASE | upload gig ssh key
+#  action: copy src=files/id_rsa.pub
+#          dest=/etc/ssh/.keys/gig
+#          owner=gig group=gig mode=600
+
+#- name: BASE | sshd configuration file update
+#  lineinfile: dest=/etc/ssh/sshd_config
+#              state=present
+#              regexp="^AuthorizedKeysFile"
+#              line="AuthorizedKeysFile  /etc/ssh/.keys/%u"
+
+#- name: BASE | sshd configuration file update
+#  lineinfile: dest=/etc/ssh/sshd_config
+#              regexp="^.*PubkeyAuthentication"
+#              line="PubkeyAuthentication yes"
+
+#- name: BASE | create sudoers file for gig
+#  file: path=/etc/sudoers.d/gig state=touch mode=0440
+
+#- name: BASE | passwordless sudo for gig
+#  lineinfile: "dest=/etc/sudoers.d/gig state=present create=yes line='gig  ALL=NOPASSWD: ALL'"
+
+- name: edit logrotate config to compress the rotated files by default
+  lineinfile: dest=/etc/logrotate.conf line="compress" regexp="^#compress$"

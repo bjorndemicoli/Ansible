@@ -1,0 +1,82 @@
+# based on https://github.com/coto/server-easy-install/blob/master/lib/core.sh
+
+lowercase(){
+    echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
+}
+specs(){
+    S_OS=`lowercase \`uname\``
+    S_KERNEL=`uname -r`
+    S_ARCH=`uname -m`
+    S_UNAME=`uname -a`
+
+    if [ "${S_OS}" = "windowsnt" ]; then
+        S_OS=windows
+    elif [ "${S_OS}" = "darwin" ]; then
+        S_OS=mac
+    else
+        S_OS=`uname`
+        if [ "${S_OS}" = "SunOS" ] ; then
+            S_OS=Solaris
+            S_ARCH=`uname -p`
+            S_OSSTR="${S_OS} ${S_REV}(${S_ARCH} `uname -v`)"
+        elif [ "${S_OS}" = "AIX" ] ; then
+            S_OSSTR="${S_OS} `oslevel` (`oslevel -r`)"
+        elif [ "${S_OS}" = "Linux" ] ; then
+            S_CPU_NUM=`cat /proc/cpuinfo | egrep "processor\s+: [0-9]+" | wc -l`
+            S_CPU_MODEL=`cat /proc/cpuinfo | egrep "model name" | tail -1 | sed 's/model name\s\+: //g'`
+            S_MEM_TOT=`free | grep Mem: | awk '{print $2}'`
+            S_ROOT_SPACE=`df -T | egrep "/$" | awk '{print $3}'`
+            S_DATA_SPACE=`df -T | egrep "/data$" | awk '{print $3}'`
+            if [ -f /etc/redhat-release ] ; then
+                S_BASE_DISTRO='RedHat'
+                S_DISTRO=`cat /etc/redhat-release |sed s/\ release.*//`
+                S_PSUEDONAME=`cat /etc/redhat-release | sed s/.*\(// | sed s/\)//`
+                S_REV=`cat /etc/redhat-release | sed s/.*release\ // | sed s/\ .*//`
+            elif [ -f /etc/SuSE-release ] ; then
+                S_BASE_DISTRO='SuSe'
+                S_PSUEDONAME=`cat /etc/SuSE-release | tr "\n" ' '| sed s/VERSION.*//`
+                S_REV=`cat /etc/SuSE-release | tr "\n" ' ' | sed s/.*=\ //`
+            elif [ -f /etc/mandrake-release ] ; then
+                S_BASE_DISTRO='Mandrake'
+                S_PSUEDONAME=`cat /etc/mandrake-release | sed s/.*\(// | sed s/\)//`
+                S_REV=`cat /etc/mandrake-release | sed s/.*release\ // | sed s/\ .*//`
+            elif [ -f /etc/debian_version ] || [ -f /etc/devuan_version ] ; then
+                S_BASE_DISTRO='Debian'
+                if [ -f /etc/lsb-release ] ; then
+                    S_DISTRO=`cat /etc/lsb-release | grep '^DISTRIB_ID' | awk -S_F=  '{ print $2 }'`
+                    S_PSUEDONAME=`cat /etc/lsb-release | grep '^DISTRIB_CODENAME' | awk -S_F=  '{ print $2 }'`
+                    S_REV=`cat /etc/lsb-release | grep '^DISTRIB_RELEASE' | awk -S_F=  '{ print $2 }'`
+                else
+                    S_DISTRO=`lsb_release -a 2>/dev/null | grep '^Distributor ID' | awk -F: '{ print $2 }' | sed 's/\s\+//g'`
+                    S_PSUEDONAME=`lsb_release -a  2>/dev/null| grep '^Codename' | awk -F: '{ print $2 }' | sed 's/\s\+//g'`
+                    S_REV=`lsb_release -a  2>/dev/null| grep '^Release' | awk -F: '{ print $2 }' | sed 's/\s\+//g'`
+                fi
+            fi
+            if [ -f /etc/UnitedLinux-release ] ; then
+                S_DISTRO="${S_DISTRO}[`cat /etc/UnitedLinux-release | tr "\n" ' ' | sed s/VERSION.*//`]"
+            fi
+            S_OS=`lowercase $S_OS`
+            S_DISTRO=`lowercase $S_DISTRO`
+            S_PSUEDONAME=`lowercase $S_PSUEDONAME`
+            S_REV=`lowercase $S_REV`
+            S_BASE_DISTRO=`lowercase $S_BASE_DISTRO`
+            echo "OS: $S_OS"
+            echo "DISTRO: $S_DISTRO"
+            echo "PSUEDONAME: $S_PSUEDONAME"
+            echo "REV: $S_REV"
+            echo "FULL_DISTRO: $S_DISTRO $S_REV ($S_PSUEDONAME)"
+            echo "BASE_DISTRO: $S_BASE_DISTRO"
+            echo "KERNEL: $S_KERNEL"
+            echo "ARCH: $S_ARCH"
+            echo "UNAME: $S_UNAME"
+            echo "========"
+            echo "CPU_MODEL: $S_CPU_MODEL"
+            echo "CPU_NUM: $S_CPU_NUM"
+            echo "MEM_TOT: $S_MEM_TOT"
+            echo "ROOT_SPACE: $S_ROOT_SPACE"
+            echo "DATA_SPACE: $S_DATA_SPACE"
+        fi
+
+    fi
+}
+# vim: set ts=4 sw=4 tw=0 ft=sh :

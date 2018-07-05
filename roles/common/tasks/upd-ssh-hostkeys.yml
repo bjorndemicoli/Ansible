@@ -1,0 +1,34 @@
+---
+
+- name: "SSH Host Keys | Removing DSA key"
+  ignore_errors: true
+  file:
+    path: /etc/ssh/ssh_host_dsa_key
+    state: absent
+
+- name: "SSH Host Keys | Removing RSA key"
+  file:
+    path: /etc/ssh/ssh_host_rsa_key
+    state: absent
+
+- name: "SSH Host Keys | Regenerating RSA key"
+  shell: ssh-keygen -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key
+  notify: restart sshd
+
+- name: "SSH Host Keys | Removing ECDSA key"
+  file:
+    path: /etc/ssh/ssh_host_ecdsa_key
+    state: absent
+
+- name: "SSH Host Keys | Regenerating ECDSA key"
+  shell: ssh-keygen -N "" -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
+  notify: restart sshd
+
+- name: "SSH Host Keys | Removing ED25519 key"
+  file:
+    path: /etc/ssh/ssh_host_ed25519_key
+    state: absent
+
+- name: "SSH Host Keys | Regenerating ED25519 key"
+  shell: ssh-keygen -N "" -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
+  notify: restart sshd

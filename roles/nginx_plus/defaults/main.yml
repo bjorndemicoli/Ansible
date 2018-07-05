@@ -1,0 +1,6 @@
+---
+
+nginx_default_release: "nginx-plus-r14-p1"
+
+nginx_worker_processes: "1"
+nginx_worker_connections: "40960"

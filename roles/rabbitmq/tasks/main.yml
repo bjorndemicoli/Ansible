@@ -1,0 +1,85 @@
+---
+#- include: firewall.yml
+#  tags:
+#    - firewall
+
+- include: hosts.yml
+  tags:
+    - hosts-file
+
+- include: preinstall.yml
+  tags:
+    - preinstall
+
+- include: install.yml
+  tags:
+    - install
+
+- include: user.yml
+  tags:
+    - user
+
+- include: cluster.yml
+  when: rabbitmq_cluster
+  tags:
+    - cluster
+
+- include: clean.yml
+  tags:
+    - clean
+- include: monit.yml
+  tags:
+    - monit
+- include: remove.yml
+  tags:
+    - remove
+  when: remove is defined
+  
+  
+- name: stopping rabbitmq app
+  command: rabbitmqctl stop_app
+
+- name: stopping rabbitmq-server
+  service:
+    name: rabbitmq-server
+    state: stopped
+
+- name: Copy RabbitMQ conf file
+  copy:
+    src: rabbitmq.config
+    dest: /etc/rabbitmq/rabbitmq.config
+    owner: root
+    group: rabbitmq
+    mode: 0644
+
+- name: no LimitFiles   
+  lineinfile:
+    path: /usr/lib/systemd/system/rabbitmq-server.service
+    regexp: '^#\s*LimitNOFILE.*$'
+    line: 'LimitNOFILE=100000'
+    create: yes
+    
+- name: Security Limits #1
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: '* soft nofile 100000'
+    create: yes
+
+- name: Security Limits #2
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: '* hard nofile 100000'
+    create: yes
+    
+
+- name: 
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: rabbitmq-server
+
+- name: Restart RabbitMQ
+  service: name=rabbitmq-server state=started
+  
+- name: start rabbitmq app
+  command: rabbitmqctl start_app

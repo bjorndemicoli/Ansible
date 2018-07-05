@@ -1,0 +1,60 @@
+
+RBT01 ansible_ssh_host=172.28.128.10
+RBT02 ansible_ssh_host=172.28.128.11
+RBT03 ansible_ssh_host=172.28.128.12
+HA1 ansible_ssh_host=172.28.128.13
+HA2 ansible_ssh_host=172.28.128.14
+NGINX01 ansible_ssh_host=172.28.128.7
+NGINX02 ansible_ssh_host=172.28.128.8
+
+
+#### RQ CLUSTER CONFIGURATION ######
+
+[RBT-master]
+RBT01
+
+[RBT-slaves]
+RBT02 
+RBT03
+
+[RBT-slaves:vars]
+rabbitmq_master=RBT01
+
+[RBT:children]
+RBT-master
+RBT-slaves
+
+
+########## PROXY ##################
+[HA-MASTER]
+HA1 master=true
+
+[HA-BACKUP]
+HA2 secondary=true
+
+[PROXY:children]
+HA-MASTER
+HA-BACKUP
+
+
+######## NGINX LB ################
+
+[LB-master]
+NGINX01
+
+[LB-backup]
+NGINX02
+
+[LB:children]
+LB-master
+LB-backup
+
+
+[LAB:children]
+RBT
+PROXY
+LB
+
+[LAB:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_pass=vagrant

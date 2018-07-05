@@ -1,0 +1,13 @@
+lvm_apply: true
+lvm_groups:
+    - vgname: 'DATA1'
+      disks: '/dev/sdb'
+      create: true
+      lvnames:
+        - lvname: 'RABBITMQ'
+          size: '3G'
+          create: true
+          filesystem: 'ext4'
+          mount: true
+          mount_point: '/var/lib/rabbitmq'
+          mount_options: 'defaults'

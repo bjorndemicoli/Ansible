@@ -1,0 +1,258 @@
+---
+
+- name: CENTOS-SEC | Installing security-related packages
+  action: yum pkg={{ item }} state=installed
+  with_items:
+     - fail2ban
+     - authconfig
+     - cracklib
+
+- name: CENTOS-SEC | Checking password hashing method
+  shell: cat /etc/pam.d/system-auth
+  register: pwd_hash_method
+  changed_when: False
+
+- name: CENTOS-SEC | Forcing SHA512 for newly created passwords
+  command: authconfig --passalgo=sha512 --updateall
+  when: not pwd_hash_method.stdout.find('sha512') != -1
+
+- name: CENTOS-SEC | Applying password policy | Diff ratio
+  lineinfile:
+    dest: /etc/security/pwquality.conf
+    regexp: ^difok
+    line: difok = 3
+    state: present
+
+- name: CENTOS-SEC | Applying password policy | Min length for PAM
+  lineinfile:
+    dest: /etc/security/pwquality.conf
+    regexp: ^minlen
+    line: minlen = 9
+    state: present
+
+- name: CENTOS-SEC | Applying password policy | Min length for shadow-utils
+  lineinfile:
+    dest: /etc/login.defs
+    regexp: ^PASS_MIN_LEN
+    line: PASS_MIN_LEN   10
+    state: present
+
+- name: CENTOS-SEC | Applying password policy | Min digits
+  lineinfile:
+    dest: /etc/security/pwquality.conf
+    regexp: ^dcredit
+    line: dcredit = 1
+    state: present
+
+- name: CENTOS-SEC | Applying password policy | Min uppercase
+  lineinfile:
+    dest: /etc/security/pwquality.conf
+    regexp: ^ucredit
+    line: ucredit = 1
+    state: present
+
+- name: CENTOS-SEC | Applying password policy | Min lowercase
+  lineinfile:
+    dest: /etc/security/pwquality.conf
+    regexp: ^lcredit
+    line: lcredit = 1
+    state: present
+
+- name: CENTOS-SEC | Applying password policy | Min special chars
+  lineinfile:
+    dest: /etc/security/pwquality.conf
+    regexp: ^ocredit
+    line: ocredit = 1
+    state: present
+
+- name: CENTOS-SEC | Applying password policy | Min char classes
+  lineinfile:
+    dest: /etc/security/pwquality.conf
+    regexp: ^minclass
+    line: minclass = 3
+    state: present
+
+- name: CENTOS-SEC | Applying password policy | Max consecutive chars
+  lineinfile:
+    dest: /etc/security/pwquality.conf
+    regexp: ^maxrepeat
+    line: maxrepeat = 3
+    state: present
+
+- name: CENTOS-SEC | Applying password policy | Check password against passwd file
+  lineinfile:
+    dest: /etc/security/pwquality.conf
+    regexp: ^gecoscheck
+    line: gecoscheck = 1
+    state: present
+
+# - name: CENTOS-SEC | Uploading restricted passwords dictionary
+#   lineinfile: /usr/local/share/dict
+
+# - name: CENTOS-SEC | Applying password policy | Restrict dictionary passwords
+#   lineinfile:
+#     dest: /etc/security/pwquality.conf
+#     regexp: ^dictpath
+#     line: dictpath = /root/123
+
+- name: CENTOS-SEC | Adjusting grub config file permissions
+  file:
+    path: /boot/grub2/grub.cfg
+    owner: root
+    group: root
+    mode: 0600
+
+- name: CENTOS-SEC | Disabling unused services
+  service: name={{item}} state=stopped enabled=no
+  ignore_errors: true
+  with_items:
+    - avahi-daemon
+    - cups
+    - xinetd
+
+- name: CENTOS-SEC | Checking limits.conf file
+  shell: cat /etc/security/limits.conf
+  register: limits_conf_contents
+  changed_when: False
+
+- name: CENTOS-SEC | Disabling CoreDumps for all users except root
+  when: not limits_conf_contents.stdout.find('hard core 0') != -1
+  lineinfile:
+    dest: /etc/security/limits.conf
+    line: "* hard core 0"
+    state: present
+
+- name: CENTOS-SEC | Disabling CoreDumps for systemd | 1
+  lineinfile:
+    dest: /etc/systemd/coredump.conf
+    regexp: ^DumpCore
+    line: DumpCore=no
+    state: present
+
+- name: CENTOS-SEC | Disabling CoreDumps for systemd | 2
+  lineinfile:
+    dest: /etc/systemd/coredump.conf
+    regexp: ^Storage
+    line: Storage=none
+    state: present
+
+- name: CENTOS-SEC | Enabling ASLR for kernel and apps
+  sysctl:
+    name: kernel.randomize_va_space
+    value: 2
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: CENTOS-SEC | Enabling TCP SYN cookies
+  sysctl:
+    name: net.ipv4.tcp_syncookies
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: CENTOS-SEC | Disabling IP forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 0
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: CENTOS-SEC | Disabling TCP timestamps
+  sysctl:
+    name: net.ipv4.tcp_timestamps
+    value: 0
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: CENTOS-SEC | Configuring SSH | Forcing v2 proto
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: Protocol 
+    line: Protocol 2
+    state: present
+  notify: restart sshd
+
+- name: CENTOS-SEC | Configuring SSH | Disabling Rhosts subsystem
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: IgnoreRhosts 
+    line: IgnoreRhosts yes
+    state: present
+  notify: restart sshd
+
+- name: CENTOS-SEC | Configuring SSH | Disabling Host-Based Auth
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: HostbasedAuthentication 
+    line: HostbasedAuthentication no
+    state: present
+  notify: restart sshd
+
+- name: CENTOS-SEC | Configuring SSH | Adjusting PermitRootLogin
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: PermitRootLogin 
+    line: PermitRootLogin without-password
+#    line: PermitRootLogin yes
+    state: present
+  notify: restart sshd
+
+- name: CENTOS-SEC | Configuring SSH | Disabling empty passwords
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: PermitEmptyPasswords 
+    line: PermitEmptyPasswords no
+    state: present
+  notify: restart sshd
+
+- name: CENTOS-SEC | Configuring SSH | Uploading legal warning message
+  template:
+    src: issue.net
+    dest: /etc/issue.net
+    owner: root
+    group: root
+    mode: 0644
+
+- name: CENTOS-SEC | Configuring SSH | Configuring legal warning message
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: Banner 
+    line: Banner /etc/issue.net
+    state: present
+  notify: restart sshd
+
+- name: CENTOS-SEC | Configuring SSH | Setting allowed server ciphers
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: Ciphers 
+    line: Ciphers aes256-ctr,aes192-ctr,aes128-ctr
+    state: present
+  notify: restart sshd
+
+- name: CENTOS-SEC | Configuring SSH | Setting allowed client ciphers
+  lineinfile:
+    dest: /etc/ssh/ssh_config
+    regexp: Ciphers 
+    line: Ciphers aes256-ctr,aes192-ctr,aes128-ctr
+    state: present
+  notify: restart sshd
+
+
+# fail2ban
+
+- name: CENTOS-SEC | Configuring Fail2Ban service
+  shell: systemctl enable fail2ban
+  changed_when: False
+
+- name: CENTOS-SEC | Configuring Fail2Ban | Uploading SSH jail configuration
+  template:
+    src: jail.local
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart fail2ban

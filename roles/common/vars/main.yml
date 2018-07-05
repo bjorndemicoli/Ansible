@@ -1,0 +1,14 @@
+---
+#base:
+#    template_ip: 10.19.71.253
+#    template_hostname: newvm.integrations.gig.com
+
+firewalld_allow_services: 
+  - { service: "http" }
+
+firewalld_allow_ports:
+  - { port: "5671/tcp" }
+  - { port: "5672/tcp" }
+  - { port: "15672/tcp" }
+  - { port: "4369/tcp" }
+  - { port: "25672/tcp" }

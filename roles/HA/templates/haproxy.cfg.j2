@@ -1,0 +1,59 @@
+global
+  log 127.0.0.1   local0
+  log 127.0.0.1   local1 notice
+  #log loghost    local0 info
+  maxconn 4096
+  #debug
+  #quiet
+  user haproxy
+  group haproxy
+
+defaults
+  log     global
+  mode    http
+  retries 3
+  timeout client 50s
+  timeout connect 10s
+  timeout server 50s
+  option dontlognull
+  option forwardfor
+  option httplog
+  option redispatch
+  balance  roundrobin
+
+# Set up application listeners here.
+
+
+listen http_rabbitmq_frontend
+  bind *:15672
+  mode http
+  default_backend http_rabbitmq_backend
+  option httpclose
+  reqadd X-Forwarded-Proto:\ http
+
+listen rabbitmq_frontend
+  bind *:5672
+  mode tcp
+  default_backend rabbitmq_backend
+  option tcplog
+
+listen admin
+  bind 127.0.0.1:22002
+  mode http
+  stats uri /
+
+
+
+backend http_rabbitmq_backend
+ balance       {{ haproxy_type_balance }}
+ mode      http
+ server    {{ haproxy_node_1 }}:15672 maxconn 4000 check
+ server    {{ haproxy_node_2 }}:15672 maxconn 4000 check
+ server    {{ haproxy_node_3 }}:15672 maxconn 4000 check
+
+backend rabbitmq_backend
+  balance roundrobin
+  mode tcp
+  server {{ haproxy_node_1 }}:5672 maxconn 4000 check
+  server {{ haproxy_node_2 }}:5672 maxconn 4000 check
+  server {{ haproxy_node_3 }}:5672 maxconn 4000 check

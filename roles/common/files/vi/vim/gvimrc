@@ -1,0 +1,60 @@
+"
+" GVIMRC - for GUI Vim Version (gvim, MacVim)
+"
+" $Id$
+"
+
+set guifont=Monospace\ 10
+
+set anti
+set lines=30 " Change in vimrc.local
+set columns=80 " Change in vimrc.local
+" set mousefocus
+set errorbells
+set visualbell
+set showtabline=2
+set guicursor=a:block-blinkon0
+set showtabline=2
+set guitablabel=%!GuiTabLabel()
+set guitabtooltip=%!GuiTabToolTip()
+set background=dark
+
+
+set guioptions-=T
+set guioptions+=a
+if &background == "dark"
+    hi normal guibg=black
+endif
+
+colorscheme Tomorrow-Night-Eighties
+" colorscheme railscasts
+" colorscheme zenburn
+" colorscheme freya
+" colorscheme southwest-fog
+" colorscheme moria
+" colorscheme morning
+" colorscheme desert
+" colorscheme macvim
+" colorscheme inkpot
+
+" Line/block move up/down
+set clipboard=unnamed
+nnoremap <M-Up> :m .-2<CR>==
+nnoremap <M-Down> :m .+1<CR>==
+
+inoremap <M-Up> <Esc>:m .-2<CR>==gi
+inoremap <M-Down> <Esc>:m .+1<CR>==gi
+
+vnoremap <M-Up> :m '<-2<CR>gv=gv
+vnoremap <M-Down> :m '>+1<CR>gv=gv
+
+" Emacs like indenting. Pressing Tab indents line
+set indentkeys=0{,0},0),:,0#,!^F,o,O,e,!<Tab>,!^F
+set cinkeys=0{,0},0),:,0#,!^F,o,O,e,!<Tab>,!^F
+
+
+
+" User customizations are held in file ~/.vim/gvimrc.local
+if filereadable($HOME."/.vim/gvimrc.local")
+    source $HOME/.vim/gvimrc.local
+endif

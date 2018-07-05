@@ -1,0 +1,13 @@
+_mosh() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts=$(grep '^Host' ~/.ssh/config | grep -v '[?*]' | cut -d ' ' -f 2-)
+    opts=$opts$(history | grep "mosh" | cut -d ' ' -f 8 | grep "^[A-Z,a-z,1-9]")
+    opts_fin=$(echo $opts | sort | uniq)
+    COMPREPLY=( $(compgen -W "$opts_fin" -- ${cur}) )
+    return 0
+}
+complete -F _mosh mosh

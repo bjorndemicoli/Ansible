@@ -1,0 +1,23 @@
+---
+
+- name: Ensure epel-release is installed.
+  yum: 
+   name: epel-release
+   state: installed
+   update_cache: yes
+
+   
+- name: Install third parts tools
+  yum: 
+   name: "{{ item }}"
+   state: installed
+   update_cache: yes
+
+  with_items:
+    - wget
+    - socat
+    - htop
+    - rsync
+    - mesa-libGL
+    - unixODBC
+    - wxBase
