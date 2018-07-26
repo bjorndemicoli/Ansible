@@ -1,0 +1,123 @@
+---
+- name: Add RPM key for Logstash
+  rpm_key:
+    state: present
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: Add Logstash repository
+  yum_repository:
+    name: logstash
+    description: Elastic repository for 5.x packages
+    baseurl: https://artifacts.elastic.co/packages/5.x/yum
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    gpgcheck: yes
+    enabled: yes
+
+- name: Install Logstash RPM packages
+  yum:
+    name: logstash
+    state: present
+  register: yum_result
+  until: yum_result is success
+  retries: "{{ retries | default(3) }}"
+  delay: "{{ delay | default(10) }}"
+
+
+- name: Ensures Logstash config file is present
+  copy:
+    src: logstash.yml
+    dest: /etc/logstash/logstash.yml
+    owner: root
+    group: logstash
+    mode: 0660
+
+- name: Ensures Logstash JVM config file is present
+  template:
+    src: jvm.options.j2
+    dest: /etc/logstash/jvm.options
+    owner: root
+    group: logstash
+    mode: 0660
+
+- name: Ensure log4j.properties for Logstash is present
+  copy:
+    src: log4j2.properties
+    dest: /etc/logstash/log4j2.properties
+    mode: 0660
+    owner: root
+    group: logstash
+
+- name: Clean filter path
+  file:
+    state: absent
+    path: /etc/logstash/conf.d/
+
+- name: Re-create filter path
+  file:
+    path: /etc/logstash/conf.d/
+    state: directory
+    mode: 0750
+
+- name: Fix file permissions for Logstash
+  file:
+    path: /etc/logstash
+    owner: root
+    group: logstash
+    mode: 0660
+    follow: yes
+
+- name: Fix folder permissions for Logstash
+  file:
+    path: "/etc/{{ item }}"
+    owner: root
+    group: logstash
+    mode: 0750
+  with_items:
+    - logstash
+    - logstash/conf.d
+
+- name: Ensures nginxToElastic file is present
+  template:
+    src: nginxToElastic.yml.j2
+    dest: /etc/logstash/conf.d/nginxToElastic.yml
+    owner: root
+    group: logstash
+    mode: 0660
+
+- name: Ensures nginx_template file is present
+  template:
+    src: nginx_template.json.j2
+    dest: /etc/logstash/conf.d/nginx_template.json
+    owner: root
+    group: logstash
+    mode: 0660
+
+- name: Ensures nginxPatterns file is present
+  copy:
+    src: nginxPatterns
+    dest: /etc/logstash/conf.d/nginxPatterns
+    owner: root
+    group: logstash
+    mode: 0660
+
+- name: Create conf directory LS_HOME
+  file:
+    path: /usr/share/logstash/config/
+    state: directory
+    mode: 0750
+
+- name: Ensure log4j.properties for Logstash is present on LS_HOME
+  copy:
+    src: log4j2.properties
+    dest: /usr/share/logstash/config/log4j2.properties
+    mode: 0660
+    owner: root
+    group: logstash
+    
+- name: Ensures Logstash config file is present
+  copy:
+    src: logstash.yml
+    dest: /usr/share/logstash/config/logstash.yml
+    owner: root
+    group: logstash
+    mode: 0660

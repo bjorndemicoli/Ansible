@@ -27,3 +27,4 @@ rabbitmq_users:  #define admin user to create in order to login to WebUI
 #the cookie
 rabbitmq_erlang_cookie: LVYQXSYSINTEXAHGHIHU
 rabbitmq_erlang_cookie_file: /var/lib/rabbitmq/.erlang.cookie
+rbt_site_master: RBT-master

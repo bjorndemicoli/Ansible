@@ -6,7 +6,24 @@ HA1 ansible_ssh_host=172.28.128.13
 HA2 ansible_ssh_host=172.28.128.14
 NGINX01 ansible_ssh_host=172.28.128.7
 NGINX02 ansible_ssh_host=172.28.128.8
+LGS01 ansible_ssh_host=172.28.128.20
+ELS01 ansible_ssh_host=172.28.128.21
 
+###### ELK ##########
+
+
+[LOGSTASH]
+LGS01
+
+
+[LOGSTASH:vars]
+logstash=true
+
+[ELASTIC]
+ELS01
+
+[ELASTIC:vars]
+elastic=false
 
 #### RQ CLUSTER CONFIGURATION ######
 
@@ -26,6 +43,8 @@ RBT-slaves
 
 
 ########## PROXY ##################
+
+
 [HA-MASTER]
 HA1 master=true
 
@@ -54,6 +73,8 @@ LB-backup
 RBT
 PROXY
 LB
+LOGSTASH
+ELASTIC
 
 [LAB:vars]
 ansible_ssh_user=vagrant

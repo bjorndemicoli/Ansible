@@ -1,6 +1,6 @@
 ---
 - name: HAproxy
-  hosts: PROXY
+  hosts: HA1
   remote_user: root
   become: yes
 

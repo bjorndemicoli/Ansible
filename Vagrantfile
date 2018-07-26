@@ -1,5 +1,6 @@
 Vagrant.configure("2") do |config|
 
+    ############## RABBITMQ ##############
     config.vm.define "rbt01" do |rbt01|
         rbt01.vm.box = "bento/centos-7.4"
         rbt01.vm.hostname = "RBT01"
@@ -39,6 +40,8 @@ Vagrant.configure("2") do |config|
         end
     end
     
+    
+   ############## HA-PROXY ############## 
     config.vm.define "ha1" do |ha1|
         ha1.vm.box = "bento/centos-7.4"
         ha1.vm.hostname = "HA1"
@@ -49,5 +52,30 @@ Vagrant.configure("2") do |config|
         ha2.vm.box = "bento/centos-7.4"
         ha2.vm.hostname = "HA2"
         ha2.vm.network "private_network" , ip: "172.28.128.14"
-    end    
+    end
+    
+    ############## ELK ##############
+    
+    # config.vm.define "lgs01" do |lgs01|
+    #     lgs01.vm.box = "bento/centos-7.4"
+    #     lgs01.vm.hostname = "lgs01"
+    #     second_drive = sprintf('.vagrant/disk_data_%s.vdi', "lgs01")
+    #     lgs01.vm.network "private_network" , ip: "172.28.128.20"
+    #     lgs01.vm.provider "virtualbox" do |v|
+    #         v.cpus = 3
+    #         v.memory = 2048
+    #     end
+    # end
+        
+    # config.vm.define "els01" do |els01|
+    #     els01.vm.box = "bento/centos-7.4"
+    #     els01.vm.hostname = "els01"
+    #     second_drive = sprintf('.vagrant/disk_data_%s.vdi', "els01")
+    #     els01.vm.network "private_network" , ip: "172.28.128.21"
+    #     els01.vm.provider "virtualbox" do |v|
+    #         v.cpus = 3
+    #         v.memory = 2048
+    #     end
+    #end
+    
 end

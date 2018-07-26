@@ -8,3 +8,4 @@ haproxy_node_2: RBT02 172.28.128.11
 haproxy_node_3: RBT03 172.28.128.12
 haproxy_type_balance: roundrobin
 haproxy_type_mode: http
+haproxy_hosts_file: "{{ groups['RBT'] }}"

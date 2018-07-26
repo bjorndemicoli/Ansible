@@ -1,0 +1,17 @@
+---
+- name: start logstash
+  systemd:
+    name: logstash
+    state: started
+    enabled: yes
+
+- name: restart logstash
+  systemd:
+    name: logstash
+    state: restarted
+
+- name: start rngd
+  systemd:
+    name: rngd
+    state: started
+    enabled: yes

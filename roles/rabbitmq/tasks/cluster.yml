@@ -33,36 +33,36 @@
   service:
     name: rabbitmq-server
     state: restarted
-  when:  "'RBT-master' in group_names"
+  when:  "rbt_site_master in group_names"
   register: cluster_master
 
 
 - name: cluster | sending sigterm to any running rabbitmq processes
   shell: pkill -u rabbitmq || true
-  when:  "'RBT-master' not in group_names"
+  when:  "rbt_site_master not in group_names"
 
 - name: cluster | restarting rabbitmq-server
   service:
     name: rabbitmq-server
     state: restarted
-  when:  "'RBT-master' not in group_names"
+  when:  "rbt_site_master not in group_names"
 
 - name: cluster | stopping rabbitmq app
   command: rabbitmqctl stop_app
-  when:  "'RBT-master' not in group_names"
+  when:  "rbt_site_master not in group_names"
 
 - name: cluster | resetting rabbitmq app
   command: rabbitmqctl reset
-  when:  "'RBT-master' not in group_names"
+  when:  "rbt_site_master not in group_names"
 
 - name: cluster | joining rabbitmq cluster
   command: rabbitmqctl join_cluster "rabbit@{{ rabbitmq_master }}"
   register: cluster_joined
-  when:  "'RBT-master' not in group_names"
+  when:  "rbt_site_master not in group_names"
 
 - name: cluster | starting rabbitmq app
   command: rabbitmqctl start_app
-  when:  "'RBT-master' not in group_names"
+  when:  "rbt_site_master not in group_names"
 
 - name: cluster | marking as clustered
   file:
