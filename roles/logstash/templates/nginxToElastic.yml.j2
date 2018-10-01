@@ -1,0 +1,86 @@
+input {
+  beats {
+    port => 5044
+    client_inactivity_timeout => "900"
+  }
+}
+
+filter {
+  if [type] == "nginx-logs" {
+    grok {
+      patterns_dir => "/etc/logstash/conf.d/nginxPatterns"
+      match => { "message" => '%{NGINXCUSTOMACCESS}' }
+    }
+
+    grok {
+      break_on_match => true
+      match => [
+        "request", "%{GREEDYDATA:uri_path}\?%{GREEDYDATA:uri_query}" ,
+        "request","%{GREEDYDATA:uri_path}"
+      ]
+    }
+
+    grok {
+      patterns_dir => "/etc/logstash/conf.d/nginxPatterns"
+      break_on_match => true
+      match => [
+        "host", "((%{GREEDYDATA:igc_service})\-)?%{DATA:igc_brand}%{IGCENV:igc_env}?(.igamingcloud.com)"
+      ]
+    }
+
+    useragent {
+      source => "http_user_agent"
+      target => "user_agent"
+    }
+
+
+    mutate {
+     convert => {
+       "upstream_addr_port" => "integer"
+       "upstream_response_time" => "float"
+       "upstream_response_length" => "integer"
+       "[user_agent][os_major]" => "integer"
+       "[user_agent][os_minor]" => "integer"
+       "[user_agent][major]" => "integer"
+       "[user_agent][minor]" => "integer"
+       "[user_agent][patch]" => "integer"
+       "[user_agent][build]" => "integer"
+       "body_bytes_sent" => "integer"
+      }
+    }
+    mutate {
+      rename => { "http_user_agent" => "agent" }
+      rename => { "upstream_addr_ip" => "[upstream][addr_ip]" }
+      rename => { "upstream_addr_port" => "[upstream][addr_port]" }
+      rename => { "upstream_status" => "[upstream][status]" }
+      rename => { "upstream_response_time" => "[upstream][response_time]" }
+      rename => { "upstream_response_length" => "[upstream][response_length]" }
+      rename => { "igc_service" => "[igc][service]" }
+      rename => { "igc_brand" => "[igc][brand]" }
+      rename => { "igc_env" => "[igc][env]" }
+    }
+
+
+    geoip {
+      source => "remote_addr"
+      target => "geoip"
+    }
+
+    date {
+      match => [ "time_local" , "dd/MMM/YYYY:HH:mm:ss Z" ]
+      target => "@timestamp"
+    }
+  }
+}
+
+output {
+ elasticsearch {
+   hosts => ["{{ ls_node_elastic }}"]
+   user => "{{ ls_user }}"
+   password => "{{ ls_password }}"
+   index => "{{ ls_index }}"
+   template => "{{ ls_path_template }}"
+   template_overwrite => true
+ }
+# stdout { codec => rubydebug }
+}

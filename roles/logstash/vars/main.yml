@@ -1,0 +1,10 @@
+---
+ls_node_name:
+ls_data_dir: /var/lib/logstash
+ls_listen_address: 0.0.0.0
+ls_heap_size: 1g
+ls_node_elastic: http://172.28.128.21:9200/
+ls_user: elastic
+ls_password: elastic
+ls_index: nginx-access-%{+YYYY.MM.dd}
+ls_path_template: /etc/logstash/conf.d/nginx_template.json

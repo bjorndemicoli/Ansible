@@ -1,0 +1,7 @@
+---
+- name: 'Install Logstash'
+  hosts: LOGSTASH
+  remote_user: root
+  become: yes
+  roles:
+    - role: logstash

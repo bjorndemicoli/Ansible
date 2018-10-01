@@ -4,7 +4,7 @@ vrrp_script chk_haproxy {
 }
 
 vrrp_instance public {
-    interface enp0s8
+    interface {{ ha.interface }}
 {% if master is defined %}
     state MASTER
     priority 200
@@ -16,7 +16,7 @@ vrrp_instance public {
     virtual_router_id 50
     unicast_src_ip {{ ansible_enp0s8.ipv4.address }}
     unicast_peer {
-{% for node in groups['PROXY'] %}
+{% for node in ha.group %}
 {% if ansible_enp0s8.ipv4.address != hostvars[node].ansible_ssh_host %}
     {{ hostvars[node].ansible_ssh_host }}
 {% endif %}
@@ -29,7 +29,7 @@ vrrp_instance public {
     }
 
     virtual_ipaddress {
-        {{ ha.internal_vip }}/32 dev enp0s8
+        {{ ha.internal_vip }}/32 dev {{ ha.interface }}
     }
 
     track_script {

@@ -2,4 +2,4 @@
 
 ###### FIREWALL #############
 
-firewalld_disable: false
+firewalld_enabled: true

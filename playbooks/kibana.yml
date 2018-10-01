@@ -1,0 +1,7 @@
+---
+- name: 'Install Kibana' 
+  hosts: KIBANA
+  remote_user: root
+  become: yes
+  roles:
+    - role: kibana

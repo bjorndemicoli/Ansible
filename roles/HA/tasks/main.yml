@@ -11,7 +11,7 @@
 - name: Start the haproxy service
   service: name=haproxy state=started enabled=yes
 
-- name: test | Build hosts file
+- name: Host | Build hosts file
   lineinfile:
     dest: /etc/hosts
     regexp: '.*{{ item }}$'

@@ -6,6 +6,17 @@
     - net-snmp-utils
   notify:
     - restart snmpd
+    
+- name: copy snmp file
+  copy:
+   src: "snmpd.conf"
+   dest: "/etc/snmp/snmpd.conf"
+   owner: "root"
+   group: "root"
+   mode: 644
+  backup: yes
+  notify:
+    - restart snmpd
 #    
 #- name: upload custom scripts
 #  copy:

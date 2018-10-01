@@ -1,0 +1,4 @@
+NGUSERNAME [a-zA-Z\.\@\-\+_%]+
+NGUSER %{NGUSERNAME}
+IGCENV (staging)|(dev)|(rc)|(qa)
+NGINXCUSTOMACCESS %{IPORHOST:remote_addr} %{NGUSER:ident} %{NGUSER:remote_user} \[%{HTTPDATE:time_local}\] "%{WORD:verb} %{URIPATHPARAM:request} HTTP/%{NUMBER:httpversion}" %{NUMBER:status_code} (?:%{NUMBER:body_bytes_sent}|-) (?:"(?:%{URI:http_referer}|-)"|%{QS:http_referer}) "%{DATA:http_user_agent}" %{QS:http_x_forwarded_for} "%{IPORHOST:host}" sn=%{QS:server_name} rt=%{BASE10NUM:request_time} ua="(?:%{IPORHOST:upstream_addr_ip}:%{POSINT:upstream_addr_port:int}|-)" us="(?:%{NUMBER:upstream_status}|-)" ut="(?:%{BASE10NUM:upstream_response_time:float}|-)" ul="(?:%{NUMBER:upstream_response_length:int}|-)" cs=- cl="(?:%{NUMBER:content_length:int}|-)" (?<request_id>[0-9a-fA-F]{32})

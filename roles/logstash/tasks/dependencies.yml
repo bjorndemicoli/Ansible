@@ -1,0 +1,30 @@
+---
+# Disable SELinux
+- selinux:
+    state: disabled
+  become: yes
+
+- name: Disable firewalld
+  service: name=firewalld state=stopped
+  
+- name: Ensure all dependencies are installed.
+  yum: 
+   name: "{{ item }}"
+   state: installed
+  with_items:
+    - epel-release
+    - wget
+    
+- name: Ensure all dependencies are installed.
+  yum: 
+   name: "{{ item }}"
+   state: installed
+  with_items:
+    - htop
+    - nano
+    - rng-tools
+    - java-1.8.0-openjdk
+  notify: start rngd
+
+- name: upgrade all packages
+  yum: name=* state=latest
