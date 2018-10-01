@@ -16,7 +16,7 @@ vrrp_instance public {
     virtual_router_id 33
     unicast_src_ip {{ ansible_eth1.ipv4.address }}
     unicast_peer {
-{% for node in groups['lb'] %}
+{% for node in groups['AZR5-HA-PROXY'] %}
 {% if ansible_eth1.ipv4.address != hostvars[node]["ansible_eth1"]["ipv4"]["address"] %}
     {{ hostvars[node]["ansible_eth1"]["ipv4"]["address"] }}
 {% endif %}

@@ -1,0 +1,7 @@
+---
+- name: Install NGINX 
+  hosts: NGINX01
+  remote_user: vagrant
+  become: yes
+  roles:
+    - nginx

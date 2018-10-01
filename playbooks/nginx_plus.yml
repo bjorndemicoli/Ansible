@@ -1,7 +1,0 @@
----
-- name: 'nginx_plus test'
-  hosts: lb
-  remote_user: vagrant
-
-  roles:
-    - role: nginx_plus

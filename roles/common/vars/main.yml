@@ -5,10 +5,14 @@
 
 firewalld_allow_services: 
   - { service: "http" }
+  - { service: "https" }
+  - { service: "snmp" }
 
 firewalld_allow_ports:
-  - { port: "5671/tcp" }
-  - { port: "5672/tcp" }
-  - { port: "15672/tcp" }
-  - { port: "4369/tcp" }
-  - { port: "25672/tcp" }
+#  - { port: "5671/tcp" }
+#  - { port: "5672/tcp" }
+#  - { port: "15672/tcp" }
+#  - { port: "4369/tcp" }
+#  - { port: "25672/tcp" }
+   - { port: "8080/tcp" }
+   

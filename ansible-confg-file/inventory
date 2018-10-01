@@ -8,6 +8,7 @@ NGINX01 ansible_ssh_host=172.28.128.7
 NGINX02 ansible_ssh_host=172.28.128.8
 LGS01 ansible_ssh_host=172.28.128.20
 ELS01 ansible_ssh_host=172.28.128.21
+KBN01 ansible_ssh_host=172.28.128.22
 
 ###### ELK ##########
 
@@ -15,15 +16,17 @@ ELS01 ansible_ssh_host=172.28.128.21
 [LOGSTASH]
 LGS01
 
-
-[LOGSTASH:vars]
-logstash=true
+[KIBANA]
+KBN01
 
 [ELASTIC]
 ELS01
 
-[ELASTIC:vars]
-elastic=false
+[ELK:children]
+LOGSTASH
+KIBANA
+ELASTIC
+
 
 #### RQ CLUSTER CONFIGURATION ######
 
@@ -73,8 +76,7 @@ LB-backup
 RBT
 PROXY
 LB
-LOGSTASH
-ELASTIC
+ELK
 
 [LAB:vars]
 ansible_ssh_user=vagrant

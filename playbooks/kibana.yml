@@ -1,6 +1,6 @@
 ---
 - name: 'Install Kibana' 
-  hosts: KBN
+  hosts: KIBANA
   remote_user: root
   become: yes
   roles:

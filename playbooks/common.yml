@@ -1,6 +1,6 @@
 ---
 - name: Install Centos-base repository
-  hosts: HA1
+  hosts: NGINX01
   remote_user: root
   become: yes
 

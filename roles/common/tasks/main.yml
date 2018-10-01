@@ -27,4 +27,4 @@
 - include_tasks: firewall.yml
   tags:
     - firewall
-  when: firewalld_disabled
+  when: firewalld_enabled
